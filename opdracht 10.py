@@ -1,3 +1,5 @@
+""" Opdracht 10 - Fibonaci """
+
 def finbonacci(n):
     if n < 0 :
         print("nummer mag niet lager dan  0 zijn")
@@ -5,7 +7,7 @@ def finbonacci(n):
     elif n == 0 :
         return 0
 
-    elif n == 1 or n== 2:
+    elif n == 1 :
         return 1
 
     else:
