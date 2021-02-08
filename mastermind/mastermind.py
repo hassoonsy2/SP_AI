@@ -1,4 +1,7 @@
 """ --- MASTERMIND --- """
+
+""" --- Naam : Hussin Almoustafa 
+     --- Date 08-02-2021"""
 import random
 
 kleuren = ["A", "B", "C", "D", "E", "F"]
