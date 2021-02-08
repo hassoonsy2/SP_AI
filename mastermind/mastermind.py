@@ -4,9 +4,9 @@ import random
 kleuren = ["A", "B", "C", "D", "E", "F"]
 
 
-
-
-
+def knowledge_maker(gok, feedback):
+    """ Een functie die alle  feedack's & gokken analyseert  """
+    return
 
 
 
@@ -52,9 +52,9 @@ def feedback_analyze(speler_gok , kleur_code ):
 
 
 
-def generate_random_move(kleur_code):
+def Een_rondom_code(kleur_code):
     """
-    Generates a random move
+     Een Functie die rondom combinatie geeft
     """
     move = []
     available_choices = ["A", "B", "C", "D", "E", "F"]
@@ -68,7 +68,8 @@ def generate_random_move(kleur_code):
 
     return move
 
-def een_conscistant_gok(gok, feedback):
+def Een_consequent_gok(gok, feedback):
+    """ Een functie die een consequent gok geeft op basis van de feedback """
     niewue_gok = []
     feedback = feedback_analyze(gok, kleur_code)
     for i in range(0, len(gok)):
@@ -87,12 +88,7 @@ def een_conscistant_gok(gok, feedback):
 
 
 
-
-
-
-
-
-def game():
+def Game():
     print(" --- MASTERMIND --- \n")
     print("Raad de geheime kleurcode in zo min mogelijk pogingen.\n")
     print("Voer uw kleurcode in. \n U kunt rood (A), groen (B), blauw (C), geel (D), wit (E) en roze (F) gebruiken")
@@ -126,10 +122,6 @@ def game():
             for i in range(0, len(speler_gok)):
                 if speler_gok[i] == kleur_code[i]:
                     juiste_kleur += "*"
-
-
-
-
                 elif speler_gok[i] != kleur_code[i] and speler_gok[i] in kleur_code :
                     geraden_kleur += "."
 
@@ -162,4 +154,4 @@ def game():
 
 
 
-game()
+Game()
