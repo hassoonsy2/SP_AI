@@ -9,6 +9,9 @@ def verchuiven(ch , n):
             elif n < 0 :
                 return ch[:n] + ch[n:]
 
+
+
+
 print(verchuiven("1011000",3))
 
 
