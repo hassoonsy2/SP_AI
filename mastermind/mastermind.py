@@ -17,17 +17,17 @@ colors = ["A", "B", "C", "D", "E", "F"]
 def Aantal_Moelijkhede():
     """ Een functie die alle kleuren combinatie in een list stopt """
 
-    keys = "ABCDEF"
-    arr = keys
+    keys = colors
     mogelijkheden = []
     for i in range(6):
         for j in range(6):
             for k in range(6):
                 for m in range(6):
-                    antwoord = arr[i] + arr[j] + arr[k] + arr[m]
+                    antwoord = keys[i] + keys[j] + keys[k] + keys[m]
                     mogelijkheden.append(antwoord)
-
+    #Hierbij return ik een alfabetisch gesorteerd lijst !
     return mogelijkheden
+
 
 def randomcode():
     """
@@ -37,68 +37,144 @@ def randomcode():
     return random.choice(mogelijkheden)
 
 
+def Geef_een_Gok(vorge_gok):
+    """
+        Een functie die een gok truge geeft
+    """
+    mogelijk_goken = Aantal_Moelijkhede()
+    for i in range(len(mogelijk_goken)):
+        if mogelijk_goken[i] == vorge_gok :
+            gok = mogelijk_goken[i + 1]
+            break
+
+    return gok
+
+
 
 
 def evaluate(gok, kleur_code):
-        zwartepen, wittepen = 0, 0
-        gokset, secretset = set([]), set([])
-        for i in range(4):
-            if gok[i] == kleur_code[i]:
-                zwartepen = zwartepen + 1
-            else:
-                gokset.add(gok[i])
-                secretset.add(kleur_code[i])
+    """
+        Een Fuctie die de gokken evalueren en de zwarte en de witte pennen treug geeft
 
-        return zwartepen, len(gokset.intersection(secretset))
+    """
+
+    zwartepen, wittepen = 0, 0
+    gokset, secretset = set([]), set([])
+    for i in range(4):
+        if gok[i] == kleur_code[i]:
+            zwartepen = zwartepen + 1
+        else:
+            gokset.add(gok[i])
+            secretset.add(kleur_code[i])
+
+    return zwartepen, len(gokset.intersection(secretset))
 
 
 
 def Simpel_strategy(kleur_code):
-    print(""" Simpel Strategy """)
+    print("""==== Simpel Strategy==== """)
+    print("=====(Gokken)===(Z)==(W)===== ")
     vorige_gokken = []
-    gok = randomcode()
+    #Hier bij beginen we met de eerste gok in de aantal moeglijkheden list
+    eerste_gok = Aantal_Moelijkhede()[0]         #AAAA
+    gok = eerste_gok
     pogingen = 0
     while True:
         zwartepen, wittepen = evaluate(gok, kleur_code)
         vorige_gokken.append((gok, zwartepen, wittepen))
-        print(gok, zwartepen, wittepen)
+        print(gok,"|",zwartepen,"| ", wittepen)
         if zwartepen == 4:
+            #Break ! we hebben de gehaime code gevonden !
             break  
         pogingen = pogingen + 1
 
         while True:
-            gok = randomcode()
+            # genereer een nieuwe willekeurige gok, consistent met
+            # alle eerdere gokken !.
+            gok = Geef_een_Gok(gok)
             consistent = True
             for g, zwartepen, wittepen in vorige_gokken:
+                # Hier wordt gekijken naar de evaluatie van de gok waarbij wordt vergelijkten om de vorigen gokken
                 nz, nw = evaluate(gok, g)
                 if nz != zwartepen or nw != wittepen:
                     consistent = False
                     break
             if consistent:
                 break
-    return gok
+    print("==========================")
+    return gok, pogingen
+
+
+
 
 def Worst_case_strategy(kleur_code):
-    print(""" Worst Case Strategy """)
-
-
+    print("""=== Worst Case Strategy ===""")
+    print("=====(Gokken)===(Z)==(W)===== ")
     vorige_gokken = []
-    gok = randomcode()
+    gok = Aantal_Moelijkhede()[0]
     pogingen = 0
     if pogingen == 0:
+        #We beginen Altijd met de gok AABB dan wordt mijn lijst met aantalmoegelijkheden worstcase (256) over
+
         gok = "AABB"
         pogingen = pogingen + 1
 
     while pogingen != 0:
         zwartepen, wittepen = evaluate(gok, kleur_code)
+        #Na de evaluatie wordt de gok , zwarte en de witten pennen toegoevoeged aan de vorige gokken lijst
         vorige_gokken.append((gok, zwartepen, wittepen))
-        print(gok, zwartepen, wittepen)
+        print(gok,"|",zwartepen,"| ", wittepen)
         if zwartepen == 4:
+            # Break ! we hebben de gehaime code gevonden !
             break  
         pogingen = pogingen + 1
 
         while True:
-            gok = randomcode()
+            # genereer een nieuwe willekeurige gok, consistent met
+            # alle eerdere gokken !.
+            gok = Geef_een_Gok(gok)
+            consistent = True
+            for g, zwartepen, wittepen in vorige_gokken:
+                #Hier wordt gekijken naar de evaluatie van de gok waarbij wordt vergelijkten om de vorigen gokken
+                nz, nw = evaluate(gok, g)
+                if nz != zwartepen or nw != wittepen:
+                    consistent = False
+                    break
+            if consistent:
+                break
+    print("==========================")
+    return gok , pogingen
+
+def Eigen_Strategy(kleur_code):
+    print("====Eigen Strategy=====")
+    print("=====(Gokken)===(Z)==(W)===== ")
+    vorige_gokken = []
+    gok = Aantal_Moelijkhede()[0]
+    pogingen = 0
+    if pogingen == 0:
+        gok = "ABCD"
+        pogingen = pogingen + 1
+
+
+    while pogingen != 0:
+
+        zwartepen, wittepen = evaluate(gok, kleur_code)
+        vorige_gokken.append((gok, zwartepen, wittepen))
+        feedback = zwartepen, wittepen
+        #Als de feedback 0 is dan wordt de gok van de lijst
+        if feedback == (0,0) :
+            for i in range(len(Aantal_Moelijkhede())):
+                if gok == Aantal_Moelijkhede()[i]:
+                    Aantal_Moelijkhede().remove(gok)
+        print(gok, "|", zwartepen, "| ", wittepen)
+        if zwartepen == 4:
+            # Break ! we hebben de gehaime code gevonden !
+            break
+        pogingen = pogingen + 1
+        while True:
+            # genereer een nieuwe willekeurige gok, consistent met
+            # alle eerdere gokken !.
+            gok = Geef_een_Gok(gok)
             consistent = True
             for g, zwartepen, wittepen in vorige_gokken:
                 nz, nw = evaluate(gok, g)
@@ -107,33 +183,40 @@ def Worst_case_strategy(kleur_code):
                     break
             if consistent:
                 break
-    return gok
+    print("==========================")
+    return gok, pogingen
+
 
 
 def Game():
-    print(" --- MASTERMIND --- \n")
-    print("Raad de geheime kleurcode in zo min mogelijk pogingen.\n")
-    print("Voer uw kleurcode in. \n U kunt rood (A), groen (B), blauw (C), geel (D), wit (E) en roze (F) gebruiken")
-
-
-    pogingen = 0
-    spelen = True
     global kleur_code
 
+
     kleur_code = randomcode()
-    print(kleur_code)
+    print(" --- MASTERMIND --- \n")
+
+    print(" Welke Algorithem Wilt u het Zien ? \n")
+    print("1. Simpel \n 2. Worst Case \n 3. Eigen \n")
+    alg = input("Voer hier de nummer in \n ")
+    if alg == 1 :
+        speler_gok, pogingen = Simpel_strategy(kleur_code)
+
+    elif alg == 2 :
+        speler_gok, pogingen = Worst_case_strategy(kleur_code)
+    elif alg == 3:
+        speler_gok, pogingen = Eigen_Strategy(kleur_code)
+    print("Raad de geheime kleurcode in zo min mogelijk pogingen.\n")
+    print("Voer uw kleurcode in. \n U kunt rood (A), groen (B), blauw (C), geel (D), wit (E) en roze (F) gebruiken.\n")
+
+
+    spelen = True
+
+    print("Het Gehiheme Code is ==( ",kleur_code ,")====")
 
     while spelen:
-
         b, w = 0, 0
         gokeset, secretset = set([]), set([])
-
-        speler_gok = Worst_case_strategy(kleur_code)
-
-
-        pogingen += 1
-
-
+        speler_gok , pogingen = Eigen_Strategy(kleur_code)
         if len(str(speler_gok)) != len(kleur_code):
 
             print(
@@ -147,14 +230,13 @@ def Game():
         if b != 4 :
             for i in range(0, len(speler_gok)):
                 if speler_gok[i] == kleur_code[i]:
-
                     b = b + 1
                 elif speler_gok[i] != kleur_code[i] and speler_gok[i] in kleur_code :
                     gokeset.add(speler_gok[i])
                     secretset.add(kleur_code[i])
             feedback1 = b, len(gokeset.intersection(secretset))
-            print(feedback1)
-            print(speler_gok)
+
+
 
         if b == 4:
             if pogingen == 1:
